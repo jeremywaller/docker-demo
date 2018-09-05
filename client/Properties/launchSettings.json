@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Client-App": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Key": "Value",
+        "CLIENT_ID": "1"
+      }
+    }
+  }
+}

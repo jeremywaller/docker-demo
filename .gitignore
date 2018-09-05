@@ -1,0 +1,7 @@
+client/.vs/
+client/bin/
+client/obj/
+api/.vs/
+api/bin/
+api/obj
+.vs/

@@ -1,0 +1,61 @@
+version: '3.1'
+
+services:
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+    container_name: elasticsearch
+    hostname: elasticsearch
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      docker-network:
+        aliases:
+          - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.2.4
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      docker-network:
+        aliases:
+          - kibana
+
+  dockerapi:
+    build: /api
+    image: dockerdemo/dockerapi
+    container_name: dockerapi
+    hostname: dockerapi
+    depends_on:
+      - elasticsearch
+      - kibana
+    networks:
+      docker-network:
+        aliases:
+          - dockerapi
+    ports:
+     - "80:80"
+  
+  client:
+    build: /client
+    image: dockerdemo/client-app
+    depends_on:
+      - dockerapi
+    environment:
+      SleepTime: 1000
+      NumberOfRequests: 20
+    networks:
+      - docker-network
+
+networks:
+  docker-network:
+    driver: bridge
+
+volumes:
+  elasticsearch-data:
