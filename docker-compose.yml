@@ -27,10 +27,10 @@ services:
         aliases:
           - kibana
 
-  dockerapi:
-    build: /api
-    image: dockerdemo/dockerapi
-    container_name: dockerapi
+  api:
+    build: api/
+    image: dockerdemo/api
+    container_name: api
     hostname: dockerapi
     depends_on:
       - elasticsearch
@@ -43,13 +43,14 @@ services:
      - "80:80"
   
   client:
-    build: /client
-    image: dockerdemo/client-app
+    build: client/
+    image: dockerdemo/client
     depends_on:
-      - dockerapi
+      - api
     environment:
       SleepTime: 1000
       NumberOfRequests: 20
+      ApiHost: dockerapi
     networks:
       - docker-network
 

@@ -20,8 +20,10 @@ namespace Client
         static async void GetData()
         {
             var machineName = Environment.MachineName;
+            var apiHost = Environment.GetEnvironmentVariable("ApiHost");
 
-            string baseUrl = $"http://dockerapi/api/values/{machineName}";
+            string baseUrl = $"http://{apiHost}/api/values/{machineName}";
+            Console.WriteLine(baseUrl);
 
             using (HttpClient client = new HttpClient())       
 
