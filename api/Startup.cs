@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using Serilog.Sinks.Elasticsearch;
+using Serilog.Sinks.Http.BatchFormatters;
 using System;
 
 namespace Api
@@ -19,11 +19,13 @@ namespace Api
             var elasticUri = Configuration["ElasticConfiguration:Uri"];
 
             Log.Logger = new LoggerConfiguration()
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUri))
-                {
-                    AutoRegisterTemplate = true,
-                    AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6
-                }).CreateLogger();
+                .Enrich.WithProperty("CorrelationId", Guid.NewGuid().ToString())
+                .Enrich.FromLogContext()
+                .WriteTo.DurableHttp(
+                    requestUri: "http://logstash:8080",
+                    batchFormatter: new ArrayBatchFormatter())
+                .WriteTo.Console()
+                .CreateLogger();
         }
 
         public IConfiguration Configuration { get; }

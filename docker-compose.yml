@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.3'
 
 services:
 
@@ -27,6 +27,21 @@ services:
         aliases:
           - kibana
 
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.2.4
+    container_name: logstash
+    volumes:
+      - ./logstash:/config-dir
+    ports:
+      - "8080:8080"
+    command: logstash -f /config-dir/logstash.conf
+    depends_on:
+    - elasticsearch
+    networks:
+      docker-network:
+        aliases:
+          - logstash
+
   api:
     build: api/
     image: dockerdemo/api
@@ -35,6 +50,7 @@ services:
     depends_on:
       - elasticsearch
       - kibana
+      - logstash
     networks:
       docker-network:
         aliases:
@@ -60,3 +76,7 @@ networks:
 
 volumes:
   elasticsearch-data:
+
+configs:
+  logstash:
+    file: ./logstash.conf
