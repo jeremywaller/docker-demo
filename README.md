@@ -6,7 +6,7 @@ Build with `docker-compose build`
 This will download all necessary base images and build each image in the docker compose file - `elasticsearch`, `kibana`, `api`, and `client`
 
 ## Runing
-Bring the API up with `docker-compose up api`. This will bring up Elastic Search and Kibana automatically.
+Bring the API up with `docker-compose up api`. This will bring up Elastic Search, Logstash, and Kibana automatically.
 
 Kibana should be available at http://localhost:5601
 Elastic Search should be available at http://localhost:9200/
